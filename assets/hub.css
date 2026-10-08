@@ -23,6 +23,7 @@ a { color: inherit; }
 :focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
 button { font: inherit; color: inherit; }
 .dh-skip { position: absolute; left: -9999px; }
+.screen-reader-text { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; } /* !important: matches core, so theme or plugin CSS can't reveal it. */
 .dh-skip:focus { left: 8px; top: 8px; z-index: 200; padding: 8px 12px; background: var(--ink); color: var(--paper); }
 .dh-main:focus { outline: 0; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
@@ -176,3 +177,9 @@ textarea.dh-input--rich { min-height: 160px; }
 	.dh-user { display: none; }
 }
 @media (prefers-reduced-motion: reduce) { .dh-drawer__panel { animation: none; } }
+
+/* Footer */
+.dh-foot { padding: 28px 20px 36px; font-size: 13px; color: var(--grey); }
+.dh-foot nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 20px; }
+.dh-foot a { color: var(--grey); text-underline-offset: 3px; }
+.dh-foot a:hover, .dh-foot a:focus-visible { color: var(--ink); }

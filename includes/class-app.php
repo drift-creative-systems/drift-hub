@@ -16,12 +16,19 @@ final class Drift_Hub_App {
 
 	const QUERY_VAR   = 'drift_hub';
 	const OPTION_ROOT = 'drift_hub_at_root';
+	const OPTION_LINKS = 'drift_hub_links';
+	const DEFAULT_LINKS = [
+		'support' => 'https://support.driftcreativesystems.co.uk/',
+		'privacy' => '',
+		'terms'   => '',
+	];
 
 	public static function init(): void {
 		add_action( 'init', [ __CLASS__, 'add_rewrite' ] );
 		add_filter( 'query_vars', static fn( $vars ) => array_merge( $vars, [ self::QUERY_VAR ] ) );
 		add_action( 'template_redirect', [ __CLASS__, 'render' ], 0 );
 		add_action( 'login_enqueue_scripts', [ __CLASS__, 'login_style' ] );
+		add_action( 'login_footer', [ __CLASS__, 'login_footer' ] );
 		add_filter( 'login_headerurl', static fn() => self::url() );
 		add_filter( 'wp_sitemaps_enabled', static fn( $on ) => self::at_root() ? false : $on );
 		add_action( 'admin_init', [ __CLASS__, 'register_setting' ] );
@@ -119,6 +126,7 @@ final class Drift_Hub_App {
 		<div class="dh-loading" aria-live="polite">Loading…</div>
 	<?php endif; ?>
 </main>
+<?php echo self::footer_html( 'dh-foot' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in footer_html(). ?>
 <div class="dh-toasts" aria-live="polite" aria-atomic="false"></div>
 <?php
 		wp_print_footer_scripts();
@@ -132,10 +140,45 @@ final class Drift_Hub_App {
 		exit;
 	}
 
+	/* ── Footer links ───────────────────────────────────────────────── */
+
+	/** Support / Privacy / Terms URLs; empty ones are hidden. */
+	public static function links(): array {
+		$saved = get_option( self::OPTION_LINKS, [] );
+		return array_merge( self::DEFAULT_LINKS, is_array( $saved ) ? $saved : [] );
+	}
+
+	/** The footer on the hub and under the login form. */
+	public static function footer_html( string $class ): string {
+		$labels = [ 'support' => 'Support', 'privacy' => 'Privacy', 'terms' => 'Terms' ];
+		$items  = [ '<span>&copy; ' . esc_html( wp_date( 'Y' ) ) . ' Drift Creative Systems</span>' ];
+		foreach ( self::links() as $key => $url ) {
+			if ( $url && isset( $labels[ $key ] ) ) {
+				$items[] = '<a href="' . esc_url( $url ) . '" target="_blank" rel="noopener">' . esc_html( $labels[ $key ] ) . '<span class="screen-reader-text"> (opens in a new tab)</span></a>';
+			}
+		}
+		return '<footer class="' . esc_attr( $class ) . '"><nav aria-label="Drift links">' . implode( '', $items ) . '</nav></footer>';
+	}
+
+	public static function login_footer(): void {
+		echo self::footer_html( 'dh-login-foot' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in footer_html().
+	}
+
 	/* ── Settings ─────────────────────────────────────────────────────── */
 
 	public static function register_setting(): void {
 		register_setting( 'drift_hub_settings', self::OPTION_ROOT, [ 'type' => 'boolean', 'sanitize_callback' => 'rest_sanitize_boolean', 'default' => false ] );
+		register_setting( 'drift_hub_settings', self::OPTION_LINKS, [
+			'type'              => 'array',
+			'default'           => self::DEFAULT_LINKS,
+			'sanitize_callback' => static function ( $value ) {
+				$out = [];
+				foreach ( array_keys( self::DEFAULT_LINKS ) as $key ) {
+					$out[ $key ] = esc_url_raw( trim( (string) ( $value[ $key ] ?? '' ) ), [ 'https', 'http', 'mailto' ] );
+				}
+				return $out;
+			},
+		] );
 	}
 
 	public static function settings_menu(): void {
@@ -153,7 +196,7 @@ final class Drift_Hub_App {
 					<tr>
 						<th scope="row">Hub address</th>
 						<td>
-							<label><input type="checkbox" name="<?php echo esc_attr( self::OPTION_ROOT ); ?>" value="1" <?php checked( self::at_root() ); ?> <?php disabled( $locked ); ?>> Make the hub the whole site</label>
+							<label><input type="checkbox" name="<?php echo esc_attr( self::OPTION_ROOT ); ?>" value="1" <?php checked( self::at_root() ); ?> <?php disabled( $locked ); ?>><?php if ( $locked && self::at_root() ) : ?><input type="hidden" name="<?php echo esc_attr( self::OPTION_ROOT ); ?>" value="1"><?php endif; ?> Make the hub the whole site</label>
 							<p class="description">
 								On: the hub opens at <code><?php echo esc_html( home_url( '/' ) ); ?></code>, <code>/hub/</code> redirects there, and every other front-end page goes to the hub too. Use this on a dedicated subdomain such as <code>surface.driftcreativesystems.co.uk</code>.<br>
 								Off: the hub lives at <code><?php echo esc_html( get_option( 'permalink_structure' ) ? home_url( '/hub/' ) : add_query_arg( self::QUERY_VAR, '1', home_url( '/' ) ) ); ?></code>.
@@ -171,8 +214,18 @@ final class Drift_Hub_App {
 						<th scope="row">Data source URL for websites</th>
 						<td><code><?php echo esc_html( rest_url( Drift_Hub_Api::NAMESPACE . '/' ) ); ?></code><p class="description">Paste into Encore Website → Connection → Data source on each artist site. Not affected by the setting above.</p></td>
 					</tr>
+					<?php
+					$links = self::links();
+					foreach ( [ 'support' => 'Support link', 'privacy' => 'Privacy notice', 'terms' => 'Terms' ] as $key => $label ) :
+						?>
+					<tr>
+						<th scope="row"><label for="dh-link-<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $label ); ?></label></th>
+						<td><input type="url" class="regular-text" id="dh-link-<?php echo esc_attr( $key ); ?>" name="<?php echo esc_attr( self::OPTION_LINKS . '[' . $key . ']' ); ?>" value="<?php echo esc_attr( $links[ $key ] ); ?>" placeholder="https://"></td>
+					</tr>
+					<?php endforeach; ?>
+					<tr><td></td><td><p class="description">Shown in the hub footer and under the login form. Leave a box empty to hide that link.</p></td></tr>
 				</table>
-				<?php if ( ! $locked ) { submit_button(); } ?>
+				<?php submit_button(); // The link fields below save even when DRIFT_HUB_AT_ROOT locks the checkbox. ?>
 			</form>
 		</div>
 		<?php
@@ -188,6 +241,10 @@ final class Drift_Hub_App {
 			.login form{border:0;border-radius:14px}
 			.login .button-primary{background:#000!important;border-color:#000!important;border-radius:999px!important}
 			.login #nav a,.login #backtoblog a{color:#c9ccd1!important}
+			.dh-login-foot{padding:24px 20px 32px;font-size:13px;color:#7a7f87;text-align:center}
+			.dh-login-foot nav{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 20px}
+			.dh-login-foot a{color:#c9ccd1;text-underline-offset:3px}
+			.dh-login-foot a:hover,.dh-login-foot a:focus{color:#fff}
 		</style>
 		<?php
 	}

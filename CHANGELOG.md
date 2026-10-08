@@ -2,6 +2,14 @@
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [SemVer](https://semver.org/).
 
+## [1.2.0] - 2026-10-08
+
+### Added
+- **Footer** on the hub and under the login form: © Drift Creative Systems, plus Support, Privacy and Terms links (open in a new tab, announced to screen readers). Set them under Drift: Surface Hub → Settings; empty ones are hidden. Support defaults to support.driftcreativesystems.co.uk. Links must be https, http or mailto.
+
+### Fixed
+- Settings: the Save button now shows even when `DRIFT_HUB_AT_ROOT` is set in wp-config.php, and saving doesn't switch the locked root setting off.
+
 ## [1.1.0] - 2026-10-08
 
 ### Changed

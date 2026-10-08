@@ -101,3 +101,7 @@ For `https://surface.driftcreativesystems.co.uk/`:
 4. On each artist website, set **Encore Website → Connection → Data source** to the URL shown on that settings page (`https://surface.driftcreativesystems.co.uk/wp-json/drift-hub/v0/`) and press **Check connection**. Tokens don't change.
 
 Managers log in at the same address; `/wp-login.php` still handles the sign-in screen.
+
+## Footer links
+
+**Drift: Surface Hub → Settings** sets the Support, Privacy notice and Terms links shown in the hub footer and under the login form. Leave one empty to hide it. Support defaults to `https://support.driftcreativesystems.co.uk/`. The hub has no public pages, so host Privacy and Terms on the main driftcreativesystems.co.uk site and link to them here.
