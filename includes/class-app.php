@@ -30,6 +30,7 @@ final class Drift_Hub_App {
 		add_action( 'login_enqueue_scripts', [ __CLASS__, 'login_style' ] );
 		add_action( 'login_footer', [ __CLASS__, 'login_footer' ] );
 		add_filter( 'login_headerurl', static fn() => self::url() );
+		add_filter( 'login_headertext', static fn() => 'Drift: Surface Hub' ); // Replaces "Powered by WordPress".
 		add_filter( 'wp_sitemaps_enabled', static fn( $on ) => self::at_root() ? false : $on );
 		add_action( 'admin_init', [ __CLASS__, 'register_setting' ] );
 		add_action( 'admin_menu', [ __CLASS__, 'settings_menu' ] );
@@ -244,8 +245,12 @@ final class Drift_Hub_App {
 		?>
 		<style>
 			body.login{background:#000;font-family:Inter,system-ui,sans-serif}
-			.login h1 a{background:none!important;text-indent:0!important;width:auto!important;height:auto!important;font:600 28px/1 Poppins,system-ui,sans-serif;letter-spacing:.16em;color:#fff!important}
-			.login h1 a::after{content:"SURFACE HUB";display:block;margin-top:6px;font:500 11px Inter,sans-serif;letter-spacing:.32em;color:#7a7f87}
+			/* Decorative rings in the Drift accent (#FF4FA3), top right and bottom left. */
+			body.login::before,body.login::after{content:"";position:fixed;z-index:0;border-radius:50%;pointer-events:none}
+			body.login::before{width:520px;height:520px;right:-260px;top:-120px;background:rgba(255,79,163,.05);box-shadow:0 0 0 70px rgba(255,79,163,.03),0 0 0 140px rgba(255,79,163,.018)}
+			body.login::after{width:250px;height:250px;left:-110px;bottom:-120px;background:rgba(255,79,163,.06);box-shadow:0 0 0 55px rgba(255,79,163,.035)}
+			#login,.dh-login-foot,.language-switcher{position:relative;z-index:1}
+			.login h1 a{background:none!important;text-indent:0!important;width:auto!important;height:auto!important;font:600 24px/1.2 Poppins,system-ui,sans-serif;letter-spacing:.04em;color:#fff!important}
 			.login form{border:0;border-radius:14px}
 			.login .button-primary{background:#000!important;border-color:#000!important;border-radius:999px!important}
 			.login #nav a,.login #backtoblog a{color:#c9ccd1!important}

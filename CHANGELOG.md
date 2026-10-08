@@ -2,6 +2,11 @@
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [SemVer](https://semver.org/).
 
+## [1.3.1] - 2026-10-08
+
+### Changed
+- **Login screen:** the title reads "Drift: Surface Hub" instead of WordPress's "Powered by WordPress", and the small "SURFACE HUB" line under it is gone. Two faint rings in the Drift pink (#FF4FA3) sit behind the form, top right and bottom left.
+
 ## [1.3.0] - 2026-10-08
 
 ### Changed
