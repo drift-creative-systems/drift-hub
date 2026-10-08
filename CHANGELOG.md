@@ -2,6 +2,16 @@
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [SemVer](https://semver.org/).
 
+## [1.1.0] - 2026-10-08
+
+### Changed
+- **Media is now per artist.** In the hub, the media picker only lists the artist you're editing: their uploads from every team member, and nothing from your other artists. Applies to admins in the hub too; wp-admin → Media still shows admins everything.
+- Saving only accepts media that belongs to that artist (members). Before, a manager could pick any of their own uploads, whichever artist they were for.
+
+### Added
+- `includes/class-media.php`. Uploads from an artist's screen are tagged with that artist (`_drift_hub_artist`), and so is any media saved into their content. A shared image can belong to more than one artist.
+- One-off tagging on update: media already used in each artist's content is tagged automatically. Older uploads that were never used anywhere stay untagged and only show in wp-admin.
+
 ## [1.0.0] - 2026-10-08
 
 First public release.

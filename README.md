@@ -33,6 +33,7 @@ One place to run every artist's website. Labels, managers and artists log in to 
 - **Artist screens:** Gigs, Music (releases), Tracks, Band, News, Photos, Videos, Press, Merch, Inbox (website enquiries), Mailing list, and Site settings.
 - **Edit, then Publish website:** edits save in the hub; Publish tells the website to pull them in, usually within a minute.
 - **Show on Site / Published:** untick to hide an item from the website without deleting it.
+- **Media per artist:** the media picker only shows the artist you're working on, including uploads from everyone on their team. Nothing from other artists appears. Admins see the full library in wp-admin → Media.
 
 ## Changing the schema
 

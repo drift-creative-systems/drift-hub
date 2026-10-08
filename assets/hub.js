@@ -523,7 +523,12 @@
 				};
 				var pick = function () {
 					if (!window.wp || !wp.media) { toast('The media library didn\'t load. Refresh the page.', 'bad'); return; }
-					var frame = wp.media({ title: f.name, multiple: f.max === 1 ? false : 'add', button: { text: 'Use ' + (f.max === 1 ? 'this' : 'these') } });
+					// Uploads are tagged with this artist, and the library only lists this artist's media (class-media.php).
+					if (wp.Uploader && wp.Uploader.defaults) {
+						wp.Uploader.defaults.multipart_params = wp.Uploader.defaults.multipart_params || {};
+						wp.Uploader.defaults.multipart_params.drift_hub_artist = a.id;
+					}
+					var frame = wp.media({ title: f.name, multiple: f.max === 1 ? false : 'add', library: { drift_hub_artist: a.id }, button: { text: 'Use ' + (f.max === 1 ? 'this' : 'these') } });
 					frame.on('select', function () {
 						var chosen = frame.state().get('selection').toJSON().map(function (m) {
 							var thumb = (m.sizes && (m.sizes.medium || m.sizes.thumbnail || m.sizes.full)) ? (m.sizes.medium || m.sizes.thumbnail || m.sizes.full).url : (m.icon || '');

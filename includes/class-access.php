@@ -27,7 +27,6 @@ final class Drift_Hub_Access {
 		add_action( 'admin_page_access_denied', [ __CLASS__, 'keep_members_out_of_admin' ] );
 		add_filter( 'show_admin_bar', [ __CLASS__, 'admin_bar' ] );
 		add_filter( 'login_redirect', [ __CLASS__, 'login_redirect' ], 10, 3 );
-		add_filter( 'ajax_query_attachments_args', [ __CLASS__, 'own_media_only' ] );
 		add_filter( 'upload_mimes', [ __CLASS__, 'member_mimes' ], 20 );
 
 		add_action( 'show_user_profile', [ __CLASS__, 'profile_fields' ] );
@@ -106,14 +105,6 @@ final class Drift_Hub_Access {
 			return Drift_Hub_App::url();
 		}
 		return $redirect;
-	}
-
-	/** Members only see (and pick from) images they uploaded themselves. */
-	public static function own_media_only( array $query ): array {
-		if ( ! self::is_admin_user() ) {
-			$query['author'] = get_current_user_id();
-		}
-		return $query;
 	}
 
 	public static function member_mimes( array $mimes ): array {

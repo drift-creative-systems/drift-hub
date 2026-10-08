@@ -4,7 +4,7 @@
  * Plugin URI:        https://github.com/drift-creative-systems/drift-hub
  * Update URI:        https://github.com/drift-creative-systems/drift-hub
  * Description:       Drift: Surface Hub — labels, managers and artists log in at /hub/ to manage every artist's gigs, releases, photos and more in one place. Artist websites (Encore Website plugin) sync their content from the hub's API.
- * Version:           1.0.0
+ * Version:           1.1.0
  * Requires at least: 6.2
  * Requires PHP:      8.0
  * Author:            Drift Creative Systems / The Bonsai Digital Collective
@@ -16,7 +16,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'DRIFT_HUB_VERSION', '1.0.0' );
+define( 'DRIFT_HUB_VERSION', '1.1.0' );
 define( 'DRIFT_HUB_FILE', __FILE__ );
 define( 'DRIFT_HUB_DIR', plugin_dir_path( __FILE__ ) );
 define( 'DRIFT_HUB_URL', plugin_dir_url( __FILE__ ) );
@@ -57,7 +57,7 @@ if ( file_exists( $drift_hub_puc ) ) {
 }
 unset( $drift_hub_puc, $drift_hub_updater );
 
-foreach ( [ 'schema', 'store', 'access', 'artists', 'api', 'app-api', 'app', 'publish' ] as $drift_hub_file ) {
+foreach ( [ 'schema', 'store', 'access', 'media', 'artists', 'api', 'app-api', 'app', 'publish' ] as $drift_hub_file ) {
 	require_once DRIFT_HUB_DIR . 'includes/class-' . $drift_hub_file . '.php';
 }
 unset( $drift_hub_file );
@@ -69,6 +69,7 @@ add_action( 'plugins_loaded', static function () {
 		update_option( 'drift_hub_version', DRIFT_HUB_VERSION, false );
 	}
 	Drift_Hub_Access::init();
+	Drift_Hub_Media::init();
 	Drift_Hub_Artists::init();
 	Drift_Hub_Api::init();
 	Drift_Hub_App_Api::init();

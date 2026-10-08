@@ -277,33 +277,13 @@ final class Drift_Hub_App_Api {
 					return $target && (int) $target['artist_id'] === $artist && $target['tbl'] === $field['link']['table'];
 				} ) );
 			}
-			// Attachments: members may only use media they uploaded.
+			// Attachments: members may only use this artist's media (see class-media.php).
 			if ( 'multipleAttachments' === $field['type'] && is_array( $clean ) && ! Drift_Hub_Access::is_admin_user() ) {
-				$clean = array_values( array_filter( $clean, static fn( $id ) => (int) get_post_field( 'post_author', $id ) === get_current_user_id() || in_array( $id, self::existing_attachments( $artist ), true ) ) );
+				$clean = array_values( array_filter( $clean, static fn( $id ) => Drift_Hub_Media::belongs( (int) $id, $artist ) ) );
 			}
 			$out[ $name ] = $clean;
 		}
 		return $errors ? new WP_Error( 'drift_hub_invalid', implode( ' ', $errors ), [ 'status' => 422, 'fields' => array_keys( $errors ) ] ) : $out;
-	}
-
-	/** Attachment IDs already used anywhere in this artist's content (shared between their team). */
-	private static function existing_attachments( int $artist ): array {
-		static $cache = [];
-		if ( isset( $cache[ $artist ] ) ) {
-			return $cache[ $artist ];
-		}
-		$ids = [];
-		foreach ( Drift_Hub_Schema::get()['tables'] as $table ) {
-			foreach ( $table['fields'] as $name => $field ) {
-				if ( 'multipleAttachments' !== $field['type'] ) {
-					continue;
-				}
-				foreach ( Drift_Hub_Store::all( $artist, $table['name'] ) as $row ) {
-					$ids = array_merge( $ids, array_map( 'intval', (array) ( $row['fields'][ $name ] ?? [] ) ) );
-				}
-			}
-		}
-		return $cache[ $artist ] = $ids;
 	}
 
 	private static function missing_required( array $table, array $fields ): array {
@@ -340,6 +320,7 @@ final class Drift_Hub_App_Api {
 			return new WP_Error( 'drift_hub_required', 'Please fill in: ' . implode( ', ', $missing ) . '.', [ 'status' => 422, 'fields' => $missing ] );
 		}
 		$record  = Drift_Hub_Store::create( $artist, $table['name'], $fields );
+		Drift_Hub_Media::tag_fields( $table, $fields, $artist );
 		$inverse = Drift_Hub_Store::inverse_links( $artist, $table );
 		return new WP_REST_Response( self::for_ui( $table, $record, $inverse[ $record['record_id'] ] ?? [] ), 201 );
 	}
@@ -358,6 +339,7 @@ final class Drift_Hub_App_Api {
 			return new WP_Error( 'drift_hub_required', 'Please fill in: ' . implode( ', ', $missing ) . '.', [ 'status' => 422, 'fields' => $missing ] );
 		}
 		$record  = Drift_Hub_Store::update( $record['record_id'], $fields );
+		Drift_Hub_Media::tag_fields( $table, $fields, $artist );
 		$inverse = Drift_Hub_Store::inverse_links( $artist, $table );
 		return new WP_REST_Response( self::for_ui( $table, $record, $inverse[ $record['record_id'] ] ?? [] ), 200 );
 	}
