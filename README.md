@@ -90,6 +90,7 @@ Sites pick it up at their next check. Always attach the zip: without it WordPres
 - **Image downloads.** Artist websites download images from the hub. On normal HTTPS hosting this just works; WordPress only allows ports 80, 443 and 8080.
 - **Encryption key.** Website publish secrets are stored encrypted. Define `DRIFT_HUB_KEY` in `wp-config.php` (any long random string) so they survive a migration.
 - **Backups.** Back up the database and `wp-content/uploads`. That's every artist's content.
+- **No third-party requests.** Fonts (Inter, Poppins) are self-hosted in `assets/fonts/`, so the hub and login screen don't contact Google or set third-party cookies.
 
 ## Running the hub on its own subdomain
 

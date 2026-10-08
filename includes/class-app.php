@@ -88,7 +88,7 @@ final class Drift_Hub_App {
 		if ( $allowed ) {
 			wp_enqueue_media();
 		}
-		wp_enqueue_style( 'drift-hub-fonts', 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600&display=swap', [], null ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
+		self::enqueue_fonts();
 		wp_enqueue_style( 'drift-hub', DRIFT_HUB_URL . 'assets/hub.css', [ 'drift-hub-fonts' ], DRIFT_HUB_VERSION );
 		wp_enqueue_script( 'drift-hub', DRIFT_HUB_URL . 'assets/hub.js', $allowed ? [ 'media-editor' ] : [], DRIFT_HUB_VERSION, true );
 		wp_localize_script( 'drift-hub', 'DriftHub', [
@@ -107,6 +107,8 @@ final class Drift_Hub_App {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
 <title>Drift: Surface Hub</title>
+<link rel="preload" href="<?php echo esc_url( DRIFT_HUB_URL . 'assets/fonts/inter-latin-400-normal.woff2' ); ?>" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="<?php echo esc_url( DRIFT_HUB_URL . 'assets/fonts/poppins-latin-600-normal.woff2' ); ?>" as="font" type="font/woff2" crossorigin>
 <?php wp_print_styles(); ?>
 <?php wp_print_head_scripts(); ?>
 </head>
@@ -232,7 +234,13 @@ final class Drift_Hub_App {
 	}
 
 	/** Drift look for the login screen hub users see. */
+	/** Inter + Poppins from assets/fonts/ — self-hosted, so no requests to Google. */
+	public static function enqueue_fonts(): void {
+		wp_enqueue_style( 'drift-hub-fonts', DRIFT_HUB_URL . 'assets/fonts/fonts.css', [], DRIFT_HUB_VERSION );
+	}
+
 	public static function login_style(): void {
+		self::enqueue_fonts();
 		?>
 		<style>
 			body.login{background:#000;font-family:Inter,system-ui,sans-serif}

@@ -2,6 +2,12 @@
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [SemVer](https://semver.org/).
 
+## [1.3.0] - 2026-10-08
+
+### Changed
+- **Fonts are self-hosted.** Inter (400/500/600) and Poppins (500/600) now load from `assets/fonts/` instead of Google Fonts, so the hub makes no requests to Google: no third-party cookies or IP logging, and nothing to declare in a cookie banner. Latin and Latin Extended, woff2, with OFL licences included. The two main files are preloaded.
+- The login screen now loads the fonts too (before, it named them but only showed them if installed on the visitor's computer).
+
 ## [1.2.0] - 2026-10-08
 
 ### Added
