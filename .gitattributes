@@ -1,0 +1,8 @@
+# Normalise line endings in the repo.
+* text=auto eol=lf
+
+# Binary assets — never line-ending convert.
+*.png binary
+*.jpg binary
+*.gif binary
+*.mo binary
