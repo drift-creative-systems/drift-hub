@@ -98,8 +98,7 @@ final class Drift_Hub_App_Api {
 	private static function artist_summary( int $id ): array {
 		$labels   = wp_get_post_terms( $id, Drift_Hub_Artists::TAXONOMY, [ 'fields' => 'names' ] );
 		$settings = Drift_Hub_Store::singleton( $id, 'Site Settings' );
-		$logo     = (array) ( $settings['fields']['Logo'] ?? [] );
-		$avatar   = (array) ( $settings['fields']['Hub Avatar'] ?? [] );
+		$pictures = Drift_Hub_Artists::pictures( (array) $settings['fields'] );
 		$new      = 0;
 		foreach ( Drift_Hub_Store::all( $id, 'Enquiries' ) as $row ) {
 			if ( 'New' === ( $row['fields']['Status'] ?? 'New' ) ) {
@@ -114,9 +113,9 @@ final class Drift_Hub_App_Api {
 			'canPublish' => Drift_Hub_Publish::ready( $id ),
 			'published' => (int) get_post_meta( $id, Drift_Hub_Publish::META_LAST, true ),
 			'changed'   => (int) get_post_meta( $id, '_drift_hub_changed', true ),
-			'logo'      => $logo ? (string) wp_get_attachment_image_url( (int) $logo[0], 'thumbnail' ) : '',
 			// Roster picture: Hub Avatar (a photo, cropped to fill), else the Logo (fitted).
-			'avatar'    => $avatar ? (string) wp_get_attachment_image_url( (int) $avatar[0], 'thumbnail' ) : '',
+			'logo'      => $pictures['logo'],
+			'avatar'    => $pictures['avatar'],
 			'newEnquiries' => $new,
 			'upcomingGigs' => count( array_filter( Drift_Hub_Store::all( $id, 'Gigs' ), static fn( $g ) => ( $g['fields']['Date'] ?? '' ) >= wp_date( 'Y-m-d' ) ) ),
 		];

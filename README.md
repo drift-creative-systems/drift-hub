@@ -18,11 +18,11 @@ One place to run every artist's website. Labels, managers and artists log in to 
 1. Install and activate **Drift: Surface Hub** on the hub site. Use pretty permalinks (Settings → Permalinks → Post name).
 2. **Drift: Surface Hub → Labels:** add each label.
 3. **Drift: Surface Hub → Add artist:** enter the name, tick its label and publish. The **Website connection** box then shows a **Data source**, a **Base ID** and **Generate token**. The token is shown once, so copy it.
-4. **On the artist's website** (Drift: Surface → Connection):
+4. **On the artist's website** (Drift: Surface Website → Connection):
    - **Data source:** the address from step 3.
    - **Base ID** and **Token:** from step 3.
    - Save, then run **Check connection** (everything should be present) and **Sync now**.
-5. **Back on the hub artist**, paste the website's address and its **Publish secret** (from Drift: Surface → Connection) into the Website connection box, then update. The hub's Publish button now updates that site.
+5. **Back on the hub artist**, paste the website's address and its **Publish secret** (from Drift: Surface Website → Connection) into the Website connection box, then update. The hub's Publish button now updates that site.
 6. **Users → Add New** for each label person, with role **Manager**. On their profile, under **Drift: Surface Hub access**, tick their label(s) and/or individual artists. Managers can change their own name, email and password from **Your account** in the hub (click their name, top right).
 
 **Artist pictures:** the roster card shows the artist's **Site settings → Images → Hub Avatar**. It's only used in the hub, so it shows straight away with no need to publish. With no avatar, the card falls back to the **Logo**, then to the artist's initials.
@@ -99,7 +99,7 @@ For `https://surface.driftcreativesystems.co.uk/`:
 1. Create the subdomain on the host, point it at its own WordPress install and turn on SSL. If the hub already runs elsewhere, move it (e.g. Migrate Guru or WP-CLI `search-replace`) so **Settings → General** shows the subdomain for both addresses.
 2. Install and activate the **Drift: Surface Hub theme**, then delete the default themes.
 3. **Drift: Surface Hub → Settings** → tick **Make the hub the whole site** → Save.
-4. On each artist website, set **Drift: Surface → Connection → Data source** to the URL shown on that settings page (`https://surface.driftcreativesystems.co.uk/wp-json/drift-hub/v0/`) and press **Check connection**. Tokens don't change.
+4. On each artist website, set **Drift: Surface Website → Connection → Data source** to the URL shown on that settings page (`https://surface.driftcreativesystems.co.uk/wp-json/drift-hub/v0/`) and press **Check connection**. Tokens don't change.
 
 Managers log in at the same address; `/wp-login.php` still handles the sign-in screen.
 

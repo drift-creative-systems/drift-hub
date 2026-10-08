@@ -1,0 +1,181 @@
+/**
+ * Drift: Surface Hub — wp-admin screens (Artists, Labels, Settings, artist
+ * edit). Matches the Drift: Surface website plugin's admin
+ * (drift-surface/assets/admin.css) and the hub (hub.css): Poppins + Inter;
+ * black, white, #7A7F87; accent #FF4FA3.
+ * Scoped to body.dh-admin (class-admin.php), so nothing leaks into the rest
+ * of wp-admin.
+ */
+
+body.dh-admin {
+	--dh-ink: #000;
+	--dh-paper: #fff;
+	--dh-grey: #7a7f87;
+	--dh-muted: #5c6168; /* About 6.3:1 on white, for body-size help text. */
+	--dh-line: #e3e5e8;
+	--dh-soft: #f5f6f7;
+	--dh-accent: #ff4fa3;
+	--dh-accent-ink: #b0115d; /* Accent as text on white, about 6.6:1. */
+	--dh-display: "Poppins", system-ui, -apple-system, "Segoe UI", sans-serif;
+	--dh-text: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+	--dh-r: 12px;
+	background: var(--dh-soft);
+}
+.dh-admin #wpbody-content { max-width: 1180px; padding-right: 20px; color: var(--dh-ink); font: 400 14px/1.55 var(--dh-text); -webkit-font-smoothing: antialiased; }
+.dh-admin #wpbody-content .wrap { margin-right: 0; }
+.dh-admin #wpbody-content h1,
+.dh-admin #wpbody-content h2,
+.dh-admin #wpbody-content h3 { font-family: var(--dh-display); color: var(--dh-ink); }
+.dh-admin #wpbody-content a { color: var(--dh-ink); text-underline-offset: 3px; }
+.dh-admin #wpbody-content a:hover { color: var(--dh-accent-ink); }
+.dh-admin #wpbody-content :focus-visible { outline: 2px solid var(--dh-ink); outline-offset: 2px; box-shadow: none; }
+
+/* Header: the hub's black top bar. */
+.dh-head {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 16px 28px;
+	margin: 20px 0 8px;
+	padding: 16px 24px;
+	background: var(--dh-ink);
+	color: var(--dh-paper);
+	border-radius: var(--dh-r);
+}
+.dh-head__brand { display: flex; align-items: center; gap: 12px; margin: 0; }
+.dh-head__mark { width: 32px; height: auto; flex: none; color: var(--dh-paper); }
+.dh-head__name { display: grid; font: 500 19px/1 var(--dh-display); letter-spacing: .16em; }
+.dh-head__name small { margin-top: 4px; font: 400 10px var(--dh-text); letter-spacing: .32em; text-transform: uppercase; color: #9ea3aa; }
+.dh-head__nav { display: flex; flex-wrap: wrap; gap: 4px; }
+.dh-admin #wpbody-content .dh-head__nav a { padding: 7px 14px; border-radius: 999px; color: #c9ccd1; text-decoration: none; font: 500 13px var(--dh-display); }
+.dh-admin #wpbody-content .dh-head__nav a:hover { color: var(--dh-paper); background: #1f2023; }
+.dh-admin #wpbody-content .dh-head__nav a[aria-current="page"] { background: var(--dh-paper); color: var(--dh-ink); }
+.dh-head__meta { display: flex; align-items: center; gap: 16px; margin-left: auto; font-size: 12px; color: var(--dh-grey); }
+.dh-admin #wpbody-content .dh-head__hub { display: inline-flex; align-items: center; min-height: 32px; padding: 0 14px; border-radius: 999px; background: var(--dh-accent); color: var(--dh-ink); text-decoration: none; font: 500 13px var(--dh-display); }
+.dh-admin #wpbody-content .dh-head__hub:hover { background: var(--dh-paper); color: var(--dh-ink); }
+.dh-admin #wpbody-content .dh-head :focus-visible { outline-color: var(--dh-accent); }
+
+/* Page title */
+.dh-admin .wrap h1.wp-heading-inline { margin: 14px 10px 14px 0; padding: 0; font: 600 26px/1.15 var(--dh-display); letter-spacing: -.02em; }
+.dh-admin .wrap > h1:not(.wp-heading-inline) { font: 600 26px/1.15 var(--dh-display); letter-spacing: -.02em; }
+.dh-admin .wrap .description { color: var(--dh-muted); }
+
+/* Buttons: the hub's pills. Black primary, outlined secondary. */
+.dh-admin .wrap .page-title-action,
+.dh-admin .wrap .button,
+.dh-admin .wrap .button-primary,
+.dh-admin .wrap .button-secondary,
+.dh-admin #poststuff .button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+	min-height: 34px;
+	padding: 0 16px;
+	border: 1.5px solid var(--dh-ink);
+	border-radius: 999px;
+	background: transparent;
+	color: var(--dh-ink);
+	font: 500 13px/1 var(--dh-display);
+	box-shadow: none;
+	text-shadow: none;
+}
+.dh-admin .wrap .page-title-action { top: -4px; background: var(--dh-ink); color: var(--dh-paper); }
+.dh-admin .wrap .button:hover,
+.dh-admin .wrap .button-secondary:hover,
+.dh-admin #poststuff .button:hover { background: var(--dh-ink); border-color: var(--dh-ink); color: var(--dh-paper); }
+.dh-admin .wrap .button-primary,
+.dh-admin #poststuff .button-primary { background: var(--dh-ink); color: var(--dh-paper); }
+.dh-admin .wrap .page-title-action:hover,
+.dh-admin .wrap .button-primary:hover,
+.dh-admin #poststuff .button-primary:hover { background: #2a2b2e; border-color: #2a2b2e; color: var(--dh-paper); }
+.dh-admin .wrap .button:focus,
+.dh-admin .wrap .page-title-action:focus,
+.dh-admin #poststuff .button:focus { box-shadow: 0 0 0 2px var(--dh-paper), 0 0 0 4px var(--dh-accent); outline: 0; }
+.dh-admin .wrap .button[disabled] { opacity: .5; }
+
+/* Form fields */
+.dh-admin .wrap input[type="text"],
+.dh-admin .wrap input[type="url"],
+.dh-admin .wrap input[type="password"],
+.dh-admin .wrap input[type="search"],
+.dh-admin .wrap input[type="number"],
+.dh-admin .wrap select,
+.dh-admin .wrap textarea { min-height: 34px; border-color: #c9ccd1; border-radius: 8px; }
+.dh-admin .wrap input:focus,
+.dh-admin .wrap select:focus,
+.dh-admin .wrap textarea:focus { border-color: var(--dh-ink); box-shadow: 0 0 0 1px var(--dh-ink); outline: 0; }
+
+/* Cards (Settings) */
+.dh-card { background: var(--dh-paper); border: 1px solid var(--dh-line); border-radius: var(--dh-r); padding: 20px 24px; margin: 18px 0; }
+.dh-admin .dh-card h2 { margin: 0 0 8px; font: 600 16px/1.3 var(--dh-display); }
+.dh-card .form-table { margin-top: 4px; }
+.dh-card .form-table th { width: 220px; font-weight: 500; color: var(--dh-ink); }
+.dh-card code { padding: 4px 8px; background: var(--dh-soft); border-radius: 6px; word-break: break-all; }
+
+/* Filters above the list */
+.dh-admin .subsubsub { margin: 4px 0 8px; font-size: 13px; color: var(--dh-grey); }
+.dh-admin .subsubsub a { text-decoration: none; }
+.dh-admin .subsubsub a.current { font-weight: 600; color: var(--dh-ink); }
+.dh-admin .subsubsub .count { color: var(--dh-grey); }
+.dh-admin .tablenav { margin: 8px 0; }
+
+/* List tables: one white card, roomy rows. */
+.dh-admin .wp-list-table { border: 1px solid var(--dh-line); border-radius: var(--dh-r); border-collapse: separate; border-spacing: 0; overflow: hidden; box-shadow: none; background: var(--dh-paper); }
+.dh-admin .wp-list-table thead th,
+.dh-admin .wp-list-table thead td,
+.dh-admin .wp-list-table tfoot th,
+.dh-admin .wp-list-table tfoot td { padding-top: 12px; padding-bottom: 12px; border-color: var(--dh-line); background: var(--dh-paper); font: 500 12px var(--dh-display); letter-spacing: .04em; text-transform: uppercase; color: var(--dh-grey); }
+.dh-admin .wp-list-table thead th a,
+.dh-admin .wp-list-table tfoot th a { color: var(--dh-grey); }
+.dh-admin .wp-list-table thead th.sorted a,
+.dh-admin .wp-list-table thead th a:hover { color: var(--dh-ink); }
+.dh-admin .striped > tbody > :nth-child(odd),
+.dh-admin .wp-list-table tbody tr { background: var(--dh-paper); }
+.dh-admin .wp-list-table tbody tr:hover { background: #fafafb; }
+.dh-admin .wp-list-table tbody td,
+.dh-admin .wp-list-table tbody th { padding-top: 14px; padding-bottom: 14px; border-top: 1px solid var(--dh-line); vertical-align: middle; }
+.dh-admin .wp-list-table tbody tr:first-child td,
+.dh-admin .wp-list-table tbody tr:first-child th { border-top: 0; }
+.dh-admin .wp-list-table .check-column { vertical-align: middle; }
+.dh-admin .wp-list-table tbody .check-column { padding-top: 14px; }
+.dh-admin .wp-list-table .row-title { font: 600 15px/1.3 var(--dh-display); color: var(--dh-ink); }
+.dh-admin .wp-list-table .post-state { font-weight: 500; color: var(--dh-grey); }
+.dh-admin .row-actions { padding-top: 4px; font-size: 12px; }
+.dh-admin .row-actions a { color: var(--dh-muted) !important; } /* !important: core's .row-actions span a colour rules are more specific than ours. */
+.dh-admin .row-actions .trash a,
+.dh-admin .row-actions .delete a { color: #c0262d !important; } /* As above. */
+.dh-admin .wp-list-table td { color: #33363b; }
+
+/* Columns: picture, website, last published. */
+.dh-admin .wp-list-table .column-drift_avatar { width: 44px; padding-right: 0; }
+.dh-admin .wp-list-table .column-drift_site,
+.dh-admin .wp-list-table .column-drift_published { width: 18%; }
+.dh-admin .wp-list-table .column-taxonomy-drift_label { width: 18%; }
+
+/* Artist picture: as on the hub roster. Photo crops to fill, logo fits. */
+.dh-admin .dh-avatar { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 10px; background: var(--dh-ink); color: var(--dh-paper); font: 600 15px var(--dh-display); overflow: hidden; }
+.dh-admin .dh-avatar img { width: 100%; height: 100%; object-fit: contain; background: var(--dh-paper); }
+.dh-admin .dh-avatar--photo img { object-fit: cover; }
+
+/* Artist edit screen: boxes as cards. */
+.dh-admin #titlediv #title { min-height: 46px; padding: 6px 14px; border-radius: 10px; font: 600 20px var(--dh-display); }
+.dh-admin .postbox { border: 1px solid var(--dh-line); border-radius: var(--dh-r); box-shadow: none; overflow: hidden; }
+.dh-admin .postbox-header { border-bottom-color: var(--dh-line); }
+.dh-admin .postbox-header .hndle { font: 600 15px var(--dh-display); }
+
+/* Labels screen */
+.dh-admin #col-left .form-wrap,
+.dh-admin #col-right .col-wrap { padding-top: 4px; }
+.dh-admin .form-wrap h2 { font: 600 16px/1.3 var(--dh-display); }
+
+/* Notices */
+.dh-admin #wpbody-content .notice { border-radius: 8px; }
+
+@media (max-width: 782px) {
+	.dh-admin #wpbody-content { padding-right: 10px; }
+	.dh-head { padding: 14px 16px; }
+	.dh-head__meta { margin-left: 0; }
+	/* Core shows non-primary columns as stacked rows on phones; the picture adds nothing there. */
+	.dh-admin .wp-list-table .column-drift_avatar { display: none !important; } /* !important: beats core's responsive td display rules. */
+}

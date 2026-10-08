@@ -120,7 +120,7 @@ final class Drift_Hub_Artists {
 			<p>Publish the artist first — the connection details appear once it's saved.</p>
 			<?php return; ?>
 		<?php endif; ?>
-		<p><strong>On the artist's website</strong> (Drift: Surface → Connection), enter:</p>
+		<p><strong>On the artist's website</strong> (Drift: Surface Website → Connection), enter:</p>
 		<table class="form-table" role="presentation">
 			<tr><th scope="row">Data source</th><td><span class="dh-code"><?php echo esc_html( self::api_url() ); ?></span></td></tr>
 			<tr><th scope="row">Base ID</th><td><span class="dh-code"><?php echo esc_html( self::base_id( $post->ID ) ); ?></span></td></tr>
@@ -135,7 +135,7 @@ final class Drift_Hub_Artists {
 				<a class="button" href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=drift_hub_token&artist=' . $post->ID ), 'drift_hub_token_' . $post->ID ) ); ?>" <?php echo $has ? 'onclick="return confirm(\'Replace the token? The website stops syncing until the new one is pasted in.\')"' : ''; ?>><?php echo $has ? 'Generate a new token' : 'Generate token'; ?></a>
 			</td></tr>
 		</table>
-		<p><strong>From the artist's website</strong> (Drift: Surface → Connection), so the hub's Publish button can update it:</p>
+		<p><strong>From the artist's website</strong> (Drift: Surface Website → Connection), so the hub's Publish button can update it:</p>
 		<table class="form-table" role="presentation">
 			<tr><th scope="row"><label for="dh-site">Website address</label></th><td><input type="url" id="dh-site" class="regular-text" name="drift_hub_site" value="<?php echo esc_attr( $site ); ?>" placeholder="https://theband.co.uk"></td></tr>
 			<tr><th scope="row"><label for="dh-secret">Publish secret</label></th><td><input type="password" id="dh-secret" class="regular-text" name="drift_hub_secret" value="" autocomplete="new-password" placeholder="<?php echo $secret ? esc_attr( '•••••••• saved — leave blank to keep' ) : ''; ?>"></td></tr>
@@ -202,13 +202,51 @@ final class Drift_Hub_Artists {
 
 	/* ── List table ──────────────────────────────────────────────────── */
 
+	/**
+	 * Roster picture URLs from an artist's Site Settings fields: the Hub
+	 * Avatar (a photo, cropped to fill) and the Logo (fitted). Empty if unset.
+	 *
+	 * @return array{avatar: string, logo: string}
+	 */
+	public static function pictures( array $settings_fields ): array {
+		$out = [];
+		foreach ( [ 'avatar' => 'Hub Avatar', 'logo' => 'Logo' ] as $key => $field ) {
+			$ids         = (array) ( $settings_fields[ $field ] ?? [] );
+			$out[ $key ] = $ids ? (string) wp_get_attachment_image_url( (int) $ids[0], 'thumbnail' ) : '';
+		}
+		return $out;
+	}
+
+	/** Picture, then title, labels, website and last published. No Date: Last published says more. */
 	public static function columns( array $cols ): array {
-		$cols['drift_site']      = 'Website';
-		$cols['drift_published'] = 'Last published';
-		return $cols;
+		$out = [];
+		foreach ( $cols as $key => $label ) {
+			if ( 'title' === $key ) {
+				$out['drift_avatar'] = '<span class="screen-reader-text">Picture</span>';
+			}
+			if ( 'date' !== $key ) {
+				$out[ $key ] = $label;
+			}
+		}
+		$out['drift_site']      = 'Website';
+		$out['drift_published'] = 'Last published';
+		return $out;
 	}
 
 	public static function column( string $col, int $post_id ): void {
+		if ( 'drift_avatar' === $col ) {
+			// Read-only lookup: listing a draft mustn't create its Site Settings row.
+			$rows = Drift_Hub_Store::all( $post_id, 'Site Settings' );
+			$pics = self::pictures( $rows ? (array) $rows[0]['fields'] : [] );
+			$src  = $pics['avatar'] ?: $pics['logo'];
+			if ( $src ) {
+				printf( '<span class="dh-avatar%s"><img src="%s" alt="" width="40" height="40" loading="lazy" decoding="async"></span>', $pics['avatar'] ? ' dh-avatar--photo' : '', esc_url( $src ) );
+			} else {
+				$words    = preg_split( '/\s+/', trim( get_the_title( $post_id ) ), -1, PREG_SPLIT_NO_EMPTY );
+				$initials = implode( '', array_map( static fn( $w ) => mb_substr( $w, 0, 1 ), array_slice( $words, 0, 2 ) ) );
+				echo '<span class="dh-avatar" aria-hidden="true">' . esc_html( mb_strtoupper( $initials ?: '?' ) ) . '</span>';
+			}
+		}
 		if ( 'drift_site' === $col ) {
 			$site = (string) get_post_meta( $post_id, self::META_SITE, true );
 			echo $site ? '<a href="' . esc_url( $site ) . '" target="_blank" rel="noopener">' . esc_html( wp_parse_url( $site, PHP_URL_HOST ) ) . '</a>' : '—';

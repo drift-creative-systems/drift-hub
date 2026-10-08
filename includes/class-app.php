@@ -100,7 +100,7 @@ final class Drift_Hub_App {
 			'allowed'  => $allowed,
 		] );
 
-		$mark = '<svg class="dh-mark" viewBox="80 40 180 160" aria-hidden="true" focusable="false"><path fill="currentColor" d="M80 40H180C220 40 260 80 260 120C260 160 220 200 180 200H80L130 150H180C196 150 210 136 210 120C210 104 196 90 180 90H80V40Z"/><path fill="currentColor" d="M90 170L150 110H210L150 170H90Z"/></svg>';
+		$mark = self::mark();
 		?><!doctype html>
 <html lang="en-GB">
 <head>
@@ -141,6 +141,11 @@ final class Drift_Hub_App {
 </html>
 		<?php
 		exit;
+	}
+
+	/** The Drift mark. Decorative: the name is always given in text beside it. */
+	public static function mark( string $class = 'dh-mark' ): string {
+		return '<svg class="' . esc_attr( $class ) . '" viewBox="80 40 180 160" aria-hidden="true" focusable="false"><path fill="currentColor" d="M80 40H180C220 40 260 80 260 120C260 160 220 200 180 200H80L130 150H180C196 150 210 136 210 120C210 104 196 90 180 90H80V40Z"/><path fill="currentColor" d="M90 170L150 110H210L150 170H90Z"/></svg>';
 	}
 
 	/* ── Footer links ───────────────────────────────────────────────── */
@@ -192,9 +197,12 @@ final class Drift_Hub_App {
 		$locked = defined( 'DRIFT_HUB_AT_ROOT' );
 		?>
 		<div class="wrap">
-			<h1>Drift: Surface Hub settings</h1>
+			<h1 class="wp-heading-inline">Settings</h1>
+			<hr class="wp-header-end">
 			<form method="post" action="options.php">
 				<?php settings_fields( 'drift_hub_settings' ); ?>
+				<section class="dh-card">
+				<h2>Address and connection</h2>
 				<table class="form-table" role="presentation">
 					<tr>
 						<th scope="row">Hub address</th>
@@ -215,8 +223,14 @@ final class Drift_Hub_App {
 					</tr>
 					<tr>
 						<th scope="row">Data source URL for websites</th>
-						<td><code><?php echo esc_html( rest_url( Drift_Hub_Api::NAMESPACE . '/' ) ); ?></code><p class="description">Paste into Drift: Surface → Connection → Data source on each artist site. Not affected by the setting above.</p></td>
+						<td><code><?php echo esc_html( rest_url( Drift_Hub_Api::NAMESPACE . '/' ) ); ?></code><p class="description">Paste into Drift: Surface Website → Connection → Data source on each artist site. Not affected by the setting above.</p></td>
 					</tr>
+				</table>
+				</section>
+				<section class="dh-card">
+				<h2>Footer links</h2>
+				<p class="description">Shown in the hub footer and under the login form. Leave a box empty to hide that link.</p>
+				<table class="form-table" role="presentation">
 					<?php
 					$links = self::links();
 					foreach ( [ 'support' => 'Support link', 'privacy' => 'Privacy notice', 'terms' => 'Terms' ] as $key => $label ) :
@@ -226,20 +240,20 @@ final class Drift_Hub_App {
 						<td><input type="url" class="regular-text" id="dh-link-<?php echo esc_attr( $key ); ?>" name="<?php echo esc_attr( self::OPTION_LINKS . '[' . $key . ']' ); ?>" value="<?php echo esc_attr( $links[ $key ] ); ?>" placeholder="https://"></td>
 					</tr>
 					<?php endforeach; ?>
-					<tr><td></td><td><p class="description">Shown in the hub footer and under the login form. Leave a box empty to hide that link.</p></td></tr>
 				</table>
+				</section>
 				<?php submit_button(); // The link fields below save even when DRIFT_HUB_AT_ROOT locks the checkbox. ?>
 			</form>
 		</div>
 		<?php
 	}
 
-	/** Drift look for the login screen hub users see. */
 	/** Inter + Poppins from assets/fonts/ — self-hosted, so no requests to Google. */
 	public static function enqueue_fonts(): void {
 		wp_enqueue_style( 'drift-hub-fonts', DRIFT_HUB_URL . 'assets/fonts/fonts.css', [], DRIFT_HUB_VERSION );
 	}
 
+	/** Drift look for the login screen hub users see. */
 	public static function login_style(): void {
 		self::enqueue_fonts();
 		?>

@@ -2,6 +2,18 @@
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [SemVer](https://semver.org/).
 
+## [1.5.0] - 2026-10-08
+
+### Added
+- **Artists list is the admin home.** Administrators land on Drift: Surface Hub → Artists after logging in (unless they were heading somewhere specific), and Dashboard → Home and the admin bar's Dashboard link go there too. The Dashboard menu stays, for Updates. Managers are unchanged: they still go straight to the hub.
+- **Artist pictures in the Artists list,** before the name: the Hub Avatar, else the Logo, else initials, as on the hub roster. Listing an artist never creates its Site Settings record.
+
+### Changed
+- **The hub's wp-admin screens** (Artists, Labels, Settings and the artist edit screen) now look like the Drift: Surface website plugin's admin: a black Drift header bar with Artists / Labels / Settings links and Open the hub, a white card table, pill buttons, Inter and Poppins. Styles live in `assets/admin.css`, scoped to those screens only.
+- **Settings** is split into two cards: Address and connection, and Footer links.
+- The Artists list drops the Date column. Last published says more.
+- Admin copy and the README now say "Drift: Surface Website → Connection".
+
 ## [1.4.0] - 2026-10-08
 
 ### Changed
