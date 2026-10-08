@@ -4,10 +4,10 @@
  * Plugin URI:        https://github.com/drift-creative-systems/drift-hub
  * Update URI:        https://github.com/drift-creative-systems/drift-hub
  * Description:       Drift: Surface Hub — labels, managers and artists log in at /hub/ to manage every artist's gigs, releases, photos and more in one place. Artist websites (Drift: Surface plugin) sync their content from the hub's API.
- * Version:           1.5.2
+ * Version:           1.5.3
  * Requires at least: 6.2
  * Requires PHP:      8.0
- * Author:            Drift Creative Systems / The Bonsai Digital Collective
+ * Author:            Drift Creative Systems
  * License:           GPL-2.0-or-later
  * Text Domain:       drift-hub
  *
@@ -16,7 +16,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'DRIFT_HUB_VERSION', '1.5.2' );
+define( 'DRIFT_HUB_VERSION', '1.5.3' );
 define( 'DRIFT_HUB_FILE', __FILE__ );
 define( 'DRIFT_HUB_DIR', plugin_dir_path( __FILE__ ) );
 define( 'DRIFT_HUB_URL', plugin_dir_url( __FILE__ ) );
