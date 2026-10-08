@@ -2,6 +2,11 @@
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [SemVer](https://semver.org/).
 
+## [1.5.2] - 2026-10-08
+
+### Changed
+- README: the repos table now links the website theme as [`surface-theme`](https://github.com/drift-creative-systems/surface-theme) (renamed from `encore-theme`) and lists its `surface_*` post types, matching Drift: Surface 3.0.0 and Drift: Surface Theme 2.0.0.
+
 ## [1.5.1] - 2026-10-08
 
 ### Changed

@@ -22,7 +22,7 @@ Drift: Surface is four repos, released separately. This section is the same in a
 | [`drift-hub`](https://github.com/drift-creative-systems/drift-hub) (plugin) | the hub site | Where content is edited. `schemas/surface.php` defines every table and field. Serves the website API (`/wp-json/drift-hub/v0/`) and sends Publish webhooks. |
 | [`drift-hub-theme`](https://github.com/drift-creative-systems/drift-hub-theme) (theme) | the hub site | Blank. Redirects the front end to the hub; 503 page if the plugin is off. |
 | [`drift-surface`](https://github.com/drift-creative-systems/drift-surface) (plugin) | each artist site | Syncs from the hub. `maps/surface.php` says which hub table/field lands in which post type, meta key or setting. Receives Publish at `/wp-json/drift-surface/v1/publish`. |
-| [`encore-theme`](https://github.com/drift-creative-systems/encore-theme) (theme, local folder `surface-theme`) | each artist site | Renders what `drift-surface` wrote: `encore_*` post types, post meta, settings. Module names are a contract with the map's `pages[].rows`. |
+| [`surface-theme`](https://github.com/drift-creative-systems/surface-theme) (theme) | each artist site | Renders what `drift-surface` wrote: `surface_*` post types, post meta, settings. Module names are a contract with the map's `pages[].rows`. |
 
 ```
 drift-hub schemas/surface.php ──API──▶ drift-surface maps/surface.php ──WP posts/meta/settings──▶ surface theme templates
