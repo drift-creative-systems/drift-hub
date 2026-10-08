@@ -2,6 +2,15 @@
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [SemVer](https://semver.org/).
 
+## [1.5.4] - 2026-10-08
+
+### Changed
+- **Add New** button on the hub's admin screens is pink with black text, and turns black with white text on hover.
+- wp-admin sidebar no longer shows Posts, Pages or Comments. The hub doesn't use them. The screens still exist if visited directly.
+
+### Removed
+- Screen Options tab across wp-admin.
+
 ## [1.5.3] - 2026-10-08
 
 ### Changed

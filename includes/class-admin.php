@@ -10,6 +10,8 @@
  *   Home      Administrators land on the Artists list after logging in, and
  *             Dashboard → Home goes there too. The Dashboard menu stays, for
  *             Updates. Managers never see wp-admin (class-access.php).
+ *   Tidy      The hub has no posts, pages or comments, so those menus go,
+ *             and Screen Options is switched off across wp-admin.
  *
  * @package Drift_Hub
  */
@@ -25,6 +27,8 @@ final class Drift_Hub_Admin {
 		add_action( 'admin_init', [ __CLASS__, 'redirect_dashboard' ], 2 );
 		add_filter( 'login_redirect', [ __CLASS__, 'login_redirect' ], 20, 3 );
 		add_action( 'admin_bar_menu', [ __CLASS__, 'admin_bar' ], 100 );
+		add_action( 'admin_menu', [ __CLASS__, 'remove_menus' ], 999 );
+		add_filter( 'screen_options_show_screen', '__return_false' );
 	}
 
 	/** The Artists list: the administrators' home screen. */
@@ -113,5 +117,14 @@ final class Drift_Hub_Admin {
 		if ( current_user_can( 'manage_options' ) && $bar->get_node( 'dashboard' ) ) {
 			$bar->add_node( [ 'id' => 'dashboard', 'title' => 'Artists', 'href' => self::home_url() ] );
 		}
+	}
+
+	/* ── Tidy ────────────────────────────────────────────────────────── */
+
+	/** Posts, Pages and Comments: unused on a hub site. Hidden from the menu only; the screens still exist. */
+	public static function remove_menus(): void {
+		remove_menu_page( 'edit.php' );
+		remove_menu_page( 'edit.php?post_type=page' );
+		remove_menu_page( 'edit-comments.php' );
 	}
 }

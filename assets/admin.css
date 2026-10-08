@@ -80,13 +80,15 @@ body.dh-admin {
 	box-shadow: none;
 	text-shadow: none;
 }
-.dh-admin .wrap .page-title-action { top: -4px; background: var(--dh-ink); color: var(--dh-paper); }
+/* Add New: pink with black text, black with white text on hover. */
+.dh-admin .wrap .page-title-action { top: -4px; border-color: var(--dh-accent); background: var(--dh-accent); color: var(--dh-ink); }
+.dh-admin #wpbody-content .wrap .page-title-action:hover,
+.dh-admin #wpbody-content .wrap .page-title-action:focus { border-color: var(--dh-ink); background: var(--dh-ink); color: var(--dh-paper); }
 .dh-admin .wrap .button:hover,
 .dh-admin .wrap .button-secondary:hover,
 .dh-admin #poststuff .button:hover { background: var(--dh-ink); border-color: var(--dh-ink); color: var(--dh-paper); }
 .dh-admin .wrap .button-primary,
 .dh-admin #poststuff .button-primary { background: var(--dh-ink); color: var(--dh-paper); }
-.dh-admin .wrap .page-title-action:hover,
 .dh-admin .wrap .button-primary:hover,
 .dh-admin #poststuff .button-primary:hover { background: #2a2b2e; border-color: #2a2b2e; color: var(--dh-paper); }
 .dh-admin .wrap .button:focus,
