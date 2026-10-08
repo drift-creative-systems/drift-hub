@@ -215,7 +215,7 @@ final class Drift_Hub_App {
 					</tr>
 					<tr>
 						<th scope="row">Data source URL for websites</th>
-						<td><code><?php echo esc_html( rest_url( Drift_Hub_Api::NAMESPACE . '/' ) ); ?></code><p class="description">Paste into Encore Website → Connection → Data source on each artist site. Not affected by the setting above.</p></td>
+						<td><code><?php echo esc_html( rest_url( Drift_Hub_Api::NAMESPACE . '/' ) ); ?></code><p class="description">Paste into Drift: Surface → Connection → Data source on each artist site. Not affected by the setting above.</p></td>
 					</tr>
 					<?php
 					$links = self::links();

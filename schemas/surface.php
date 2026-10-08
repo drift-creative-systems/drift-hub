@@ -4,8 +4,8 @@
  *
  * THE single source of truth for every artist's content. Add a field here
  * and every artist on the hub has it immediately: no template base, no
- * migrate script. Names and types match the Encore Website map
- * (maps/encore.php) so artist websites sync from the hub without any
+ * migrate script. Names and types match the Drift: Surface map
+ * (maps/surface.php) so artist websites sync from the hub without any
  * change to their product map.
  *
  * Field keys:

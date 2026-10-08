@@ -4,7 +4,7 @@
  *
  * Stamps the artist's Site Settings → Last Published (which the website's
  * daily safety check compares), then calls the website's publish webhook
- * (Encore Website: POST /wp-json/encore/v1/publish with X-Encore-Secret).
+ * (Drift: Surface: POST /wp-json/drift-surface/v1/publish with X-Drift-Surface-Secret).
  * The website queues a sync and pulls everything from the hub.
  *
  * The website's publish secret is stored encrypted (AES-256-GCM, key from
@@ -71,14 +71,14 @@ final class Drift_Hub_Publish {
 		$site = untrailingslashit( (string) get_post_meta( $artist_id, Drift_Hub_Artists::META_SITE, true ) );
 		$args = [
 			'timeout' => 15,
-			'headers' => [ 'Content-Type' => 'application/json', 'X-Encore-Secret' => self::secret( $artist_id ) ],
+			'headers' => [ 'Content-Type' => 'application/json', 'X-Drift-Surface-Secret' => self::secret( $artist_id ) ],
 			'body'    => wp_json_encode( [ 'last_published' => $stamp, 'by' => 'drift-hub' ] ),
 		];
 
-		$response = wp_remote_post( $site . '/wp-json/encore/v1/publish', $args );
+		$response = wp_remote_post( $site . '/wp-json/drift-surface/v1/publish', $args );
 		if ( ! is_wp_error( $response ) && 404 === (int) wp_remote_retrieve_response_code( $response ) ) {
 			// Site without pretty permalinks.
-			$response = wp_remote_post( add_query_arg( 'rest_route', '/encore/v1/publish', $site . '/' ), $args );
+			$response = wp_remote_post( add_query_arg( 'rest_route', '/drift-surface/v1/publish', $site . '/' ), $args );
 		}
 
 		if ( is_wp_error( $response ) ) {

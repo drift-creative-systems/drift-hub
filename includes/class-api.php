@@ -2,7 +2,7 @@
 /**
  * class-api.php — the API artist websites sync from.
  *
- * Serves exactly what the Encore Website plugin reads. A site connects by
+ * Serves exactly what the Drift: Surface plugin reads. A site connects by
  * entering its data source URL, base ID and token — nothing else:
  *
  *   GET  {ns}/meta/bases/{base}/tables         schema (Check connection)

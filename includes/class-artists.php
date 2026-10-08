@@ -120,7 +120,7 @@ final class Drift_Hub_Artists {
 			<p>Publish the artist first — the connection details appear once it's saved.</p>
 			<?php return; ?>
 		<?php endif; ?>
-		<p><strong>On the artist's website</strong> (Encore Website → Connection), enter:</p>
+		<p><strong>On the artist's website</strong> (Drift: Surface → Connection), enter:</p>
 		<table class="form-table" role="presentation">
 			<tr><th scope="row">Data source</th><td><span class="dh-code"><?php echo esc_html( self::api_url() ); ?></span></td></tr>
 			<tr><th scope="row">Base ID</th><td><span class="dh-code"><?php echo esc_html( self::base_id( $post->ID ) ); ?></span></td></tr>
@@ -135,7 +135,7 @@ final class Drift_Hub_Artists {
 				<a class="button" href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=drift_hub_token&artist=' . $post->ID ), 'drift_hub_token_' . $post->ID ) ); ?>" <?php echo $has ? 'onclick="return confirm(\'Replace the token? The website stops syncing until the new one is pasted in.\')"' : ''; ?>><?php echo $has ? 'Generate a new token' : 'Generate token'; ?></a>
 			</td></tr>
 		</table>
-		<p><strong>From the artist's website</strong> (Encore Website → Connection), so the hub's Publish button can update it:</p>
+		<p><strong>From the artist's website</strong> (Drift: Surface → Connection), so the hub's Publish button can update it:</p>
 		<table class="form-table" role="presentation">
 			<tr><th scope="row"><label for="dh-site">Website address</label></th><td><input type="url" id="dh-site" class="regular-text" name="drift_hub_site" value="<?php echo esc_attr( $site ); ?>" placeholder="https://theband.co.uk"></td></tr>
 			<tr><th scope="row"><label for="dh-secret">Publish secret</label></th><td><input type="password" id="dh-secret" class="regular-text" name="drift_hub_secret" value="" autocomplete="new-password" placeholder="<?php echo $secret ? esc_attr( '•••••••• saved — leave blank to keep' ) : ''; ?>"></td></tr>

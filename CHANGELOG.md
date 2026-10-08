@@ -2,6 +2,12 @@
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [SemVer](https://semver.org/).
 
+## [1.4.0] - 2026-10-08
+
+### Changed
+- **Publish** now calls the renamed artist-website plugin, Drift: Surface 3.0 (formerly Encore Website): `POST /wp-json/drift-surface/v1/publish` with an `X-Drift-Surface-Secret` header. Sites still on Encore Website 2.x won't receive publishes until they move to Drift: Surface 3.0.
+- Admin copy, the README and the schema notes say "Drift: Surface → Connection" instead of "Encore Website → Connection", and point at `maps/surface.php`.
+
 ## [1.3.1] - 2026-10-08
 
 ### Changed
