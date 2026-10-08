@@ -109,7 +109,7 @@ final class Drift_Hub_Access {
 
 	public static function member_mimes( array $mimes ): array {
 		if ( self::is_member() && ! self::is_admin_user() ) {
-			return array_intersect_key( $mimes, array_flip( [ 'jpg|jpeg|jpe', 'png', 'gif', 'webp', 'avif', 'pdf' ] ) );
+			return array_intersect_key( $mimes, array_flip( [ 'jpg|jpeg|jpe', 'png', 'gif', 'webp', 'avif', 'pdf', 'mp4|m4v', 'webm' ] ) );
 		}
 		return $mimes;
 	}

@@ -131,7 +131,23 @@ button { font: inherit; color: inherit; }
 .dh-help { margin: 0; font-size: 12.5px; color: var(--grey); }
 .dh-input { width: 100%; min-height: 40px; padding: 9px 12px; border: 1px solid #d5d8dc; border-radius: 10px; background: var(--paper); font: inherit; color: var(--ink); }
 textarea.dh-input { min-height: 96px; resize: vertical; line-height: 1.5; }
-textarea.dh-input--rich { min-height: 160px; }
+/* Rich text (WYSIWYG over Markdown — hub.js richEditor). */
+.dh-rich { border: 1px solid #d5d8dc; border-radius: 10px; background: var(--paper); overflow: hidden; }
+.dh-rich:focus-within { outline: 2px solid var(--ink); border-color: transparent; }
+.dh-rich__bar { display: flex; flex-wrap: wrap; gap: 2px; padding: 4px; border-bottom: 1px solid var(--line); background: var(--soft); }
+.dh-rich__btn { min-width: 32px; height: 32px; padding: 0 8px; border: 0; border-radius: 6px; background: transparent; font: 600 14px var(--display); color: var(--ink); cursor: pointer; }
+.dh-rich__btn:hover { background: var(--line); }
+.dh-rich__btn:focus-visible { outline: 2px solid var(--ink); outline-offset: -2px; }
+.dh-rich__btn--b { font-weight: 800; }
+.dh-rich__btn--i { font-style: italic; font-family: Georgia, serif; }
+.dh-rich__area { min-height: 160px; max-height: 60vh; overflow: auto; padding: 10px 12px; line-height: 1.55; outline: 0; }
+.dh-rich__area > :first-child { margin-top: 0; }
+.dh-rich__area > :last-child { margin-bottom: 0; }
+.dh-rich__area p, .dh-rich__area ul, .dh-rich__area ol { margin: 0 0 .8em; }
+.dh-rich__area h3 { margin: 1em 0 .4em; font: 600 17px var(--display); }
+.dh-rich__area a { color: var(--accent-ink); }
+.dh-rich.is-readonly { background: var(--soft); color: #44474d; }
+.dh-field.is-invalid .dh-rich { border-color: var(--bad); box-shadow: inset 3px 0 0 var(--bad); }
 .dh-input:focus { outline: 2px solid var(--ink); outline-offset: 0; border-color: transparent; }
 .dh-input[readonly] { background: var(--soft); color: #44474d; }
 .dh-field.is-invalid .dh-input { border-color: var(--bad); box-shadow: inset 3px 0 0 var(--bad); }

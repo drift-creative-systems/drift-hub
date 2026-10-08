@@ -2,6 +2,18 @@
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [SemVer](https://semver.org/).
 
+## [1.6.0] - 2026-10-08
+
+### Added
+- **WYSIWYG rich text.** Full Bio and every other rich text field (Notes, Description, Lyrics, Bio, Body) has a formatting toolbar instead of a Markdown textarea: bold, italic, heading, bulleted and numbered lists, and links (Ctrl+B, Ctrl+I, Ctrl+K). Values are still stored and sent to websites as Markdown, so the website API is unchanged. Opening and saving without editing leaves the stored text exactly as it was. Pasting brings in plain text only.
+- **Hero Video** (Site Settings → Images): upload an MP4/WebM background video. The picker lists videos only. Hero Video URL stays as the fallback for videos hosted elsewhere. Needs Drift: Surface 3.1.0 and Drift: Surface Theme 2.1.0 to show on the website.
+- **General Email** (Site Settings → Contact): general enquiries address, listed first on the website's contact page.
+- Schema key `accept` (`'image'` / `'video'`) limits an attachment field's media picker to one kind.
+
+### Changed
+- Members can upload MP4 and WebM files as well as images and PDFs.
+- Rich text in list views shows as plain text, without Markdown symbols.
+
 ## [1.5.4] - 2026-10-08
 
 ### Changed

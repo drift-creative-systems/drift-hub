@@ -363,7 +363,8 @@
 			case 'multipleSelects': return value.join(', ');
 			case 'multipleRecordLinks': return linkNames(a, f, value);
 			case 'singleSelect': return h('span', { class: 'dh-chip', text: value });
-			case 'multilineText': case 'richText': return h('span', { class: 'dh-clamp', text: value });
+			case 'multilineText': return h('span', { class: 'dh-clamp', text: value });
+			case 'richText': return h('span', { class: 'dh-clamp', text: mdPlain(value) });
 			default: return String(value);
 		}
 	}
@@ -423,6 +424,182 @@
 
 	/* ── Field inputs ────────────────────────────────────────────────── */
 
+	/* ── Rich text: WYSIWYG over Markdown ───────────────────────────────
+	 * Rich text is stored and sent to websites as Markdown (the website
+	 * turns it into HTML: Drift_Surface_Media::markdown_to_html). The editor
+	 * only offers what that converter understands: bold, italic, links,
+	 * headings, lists and paragraphs. */
+
+	function esc(s) {
+		return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+	}
+
+	// Markdown → editor HTML. Escapes first, mirroring the website's converter.
+	function mdToHtml(md) {
+		var inline = function (s) {
+			s = esc(s);
+			s = s.replace(/\[([^\]\n]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2">$1</a>');
+			s = s.replace(/\*\*([^*\n]+?)\*\*/g, '<strong>$1</strong>');
+			return s.replace(/(^|[^\w*])[*_]([^*_\n]+?)[*_](?![\w*])(?![^<]*>)/g, '$1<em>$2</em>');
+		};
+		var out = [], para = [], list = '';
+		var closePara = function () { if (para.length) { out.push('<p>' + para.join('<br>') + '</p>'); para = []; } };
+		var closeList = function () { if (list) { out.push('</' + list + '>'); list = ''; } };
+		String(md || '').replace(/\r\n/g, '\n').split('\n').forEach(function (line) {
+			var m, type = '';
+			if ((m = line.match(/^\s*[-*]\s+(.+)$/))) { type = 'ul'; }
+			else if ((m = line.match(/^\s*\d+\.\s+(.+)$/))) { type = 'ol'; }
+			if (type) {
+				closePara();
+				if (list !== type) { closeList(); out.push('<' + type + '>'); list = type; }
+				out.push('<li>' + inline(m[1]) + '</li>');
+				return;
+			}
+			closeList();
+			if ((m = line.match(/^\s*#{1,6}\s+(.+)$/))) { closePara(); out.push('<h3>' + inline(m[1]) + '</h3>'); }
+			else if (line.trim() === '') { closePara(); }
+			else { para.push(inline(line)); }
+		});
+		closePara();
+		closeList();
+		return out.join('');
+	}
+
+	// Editor HTML → Markdown. Anything the website can't show is kept as plain text.
+	function htmlToMd(root) {
+		var blocks = [];
+		var inline = function (node) {
+			var out = '';
+			[].forEach.call(node.childNodes, function (n) { out += one(n); });
+			return out;
+		};
+		var one = function (n) {
+			if (n.nodeType === 3) { return n.nodeValue.replace(/ /g, ' ').replace(/\n/g, ' '); }
+			if (n.nodeType !== 1) { return ''; }
+			if (n.nodeName === 'BR') { return '\n'; }
+			var inner = inline(n);
+			// Markers hug the words: "**bold** " not "**bold **".
+			var wrap = function (mk) { var p = inner.match(/^(\s*)([\s\S]*?)(\s*)$/); return p[2] ? p[1] + mk + p[2] + mk + p[3] : inner; };
+			var href = n.nodeName === 'A' ? (n.getAttribute('href') || '') : '';
+			if (n.nodeName === 'STRONG' || n.nodeName === 'B') { return wrap('**'); }
+			if (n.nodeName === 'EM' || n.nodeName === 'I') { return wrap('_'); }
+			if (/^https?:\/\//i.test(href) && inner.trim()) {
+				return '[' + inner.replace(/[[\]\n]/g, ' ') + '](' + href.replace(/\s/g, '%20').replace(/\)/g, '%29') + ')';
+			}
+			return inner;
+		};
+		var walk = function (node) {
+			var loose = '';
+			var flush = function () { var t = loose.trim(); if (t) { blocks.push(t); } loose = ''; };
+			[].forEach.call(node.childNodes, function (n) {
+				var tag = n.nodeType === 1 ? n.nodeName : '';
+				if (/^H[1-6]$/.test(tag)) {
+					flush();
+					var head = inline(n).replace(/\s+/g, ' ').trim();
+					if (head) { blocks.push('### ' + head); }
+				} else if (tag === 'UL' || tag === 'OL') {
+					flush();
+					var lines = [];
+					// Nested lists flatten into this one: the website has one level.
+					var items = function (list) {
+						[].forEach.call(list.children, function (li) {
+							var own = li.cloneNode(true);
+							[].forEach.call(own.querySelectorAll('ul, ol'), function (sub) { sub.remove(); });
+							var t = inline(own).replace(/\s+/g, ' ').trim();
+							if (t) { lines.push((tag === 'OL' ? (lines.length + 1) + '. ' : '- ') + t); }
+							[].forEach.call(li.querySelectorAll(':scope > ul, :scope > ol'), items);
+						});
+					};
+					items(n);
+					if (lines.length) { blocks.push(lines.join('\n')); }
+				} else if (tag === 'P' || tag === 'DIV' || tag === 'BLOCKQUOTE') {
+					flush();
+					if (n.querySelector('p, div, ul, ol, h1, h2, h3, h4, h5, h6, blockquote')) { walk(n); }
+					else {
+						var t = inline(n).split('\n').map(function (l) { return l.trim(); }).join('\n').trim();
+						if (t) { blocks.push(t); }
+					}
+				} else {
+					loose += one(n);
+				}
+			});
+			flush();
+		};
+		walk(root);
+		return blocks.join('\n\n');
+	}
+
+	// Markdown → one line of plain text, for list cells.
+	function mdPlain(md) {
+		return String(md).replace(/\[([^\]\n]+)\]\([^)\s]+\)/g, '$1').replace(/\*\*/g, '').replace(/(^|\W)[*_](?=\S)|(\S)[*_](?=\W|$)/g, '$1$2').replace(/^\s*(#{1,6}|[-*]|\d+\.)\s+/gm, '');
+	}
+
+	/**
+	 * WYSIWYG box for a richText field. Returns { el, get(), focus() }.
+	 * get() hands back the original Markdown untouched until the box is edited,
+	 * so opening and saving a record never rewrites someone's formatting.
+	 */
+	function richEditor(id, f, value, ro, describedBy, mark) {
+		var touched = false;
+		var area = h('div', { id: id, class: 'dh-rich__area', role: 'textbox', 'aria-multiline': 'true', 'aria-labelledby': id + '-l', 'aria-describedby': describedBy, 'aria-readonly': ro ? 'true' : null, contenteditable: ro ? 'false' : 'true' });
+		area.innerHTML = mdToHtml(value);
+		var changed = function () { touched = true; mark(); };
+
+		var exec = function (cmd, arg) {
+			area.focus();
+			document.execCommand('styleWithCSS', false, false);
+			document.execCommand('defaultParagraphSeparator', false, 'p');
+			document.execCommand(cmd, false, arg);
+			changed();
+		};
+		var link = function () {
+			var sel = window.getSelection();
+			var inLink = sel.anchorNode && (sel.anchorNode.nodeType === 1 ? sel.anchorNode : sel.anchorNode.parentNode).closest('a');
+			var url = window.prompt('Link address (leave empty to remove the link)', inLink ? inLink.getAttribute('href') : 'https://');
+			if (url === null) { return; }
+			url = url.trim();
+			if (!url || url === 'https://') {
+				if (inLink) { sel.selectAllChildren(inLink); }
+				exec('unlink');
+				return;
+			}
+			if (!/^https?:\/\//i.test(url)) { url = 'https://' + url.replace(/^\/+/, ''); }
+			if (sel.isCollapsed && !inLink) { exec('insertHTML', '<a href="' + esc(url) + '">' + esc(url) + '</a>'); }
+			else { exec('createLink', url); }
+		};
+		var heading = function () {
+			exec('formatBlock', /^h\d$/i.test(document.queryCommandValue('formatBlock')) ? 'p' : 'h3');
+		};
+		var tool = function (label, text, cls, fn) {
+			return h('button', { type: 'button', class: 'dh-rich__btn ' + cls, title: label, 'aria-label': label, text: text, onmousedown: function (e) { e.preventDefault(); }, onclick: fn });
+		};
+
+		area.addEventListener('input', changed);
+		area.addEventListener('paste', function (e) {
+			// Paste as plain text: formatting from Word or web pages can't reach the website anyway.
+			e.preventDefault();
+			exec('insertText', (e.clipboardData || window.clipboardData).getData('text/plain'));
+		});
+		area.addEventListener('keydown', function (e) {
+			if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); link(); }
+		});
+
+		var bar = ro ? null : h('div', { class: 'dh-rich__bar', role: 'toolbar', 'aria-label': f.name + ' formatting', 'aria-controls': id }, [
+			tool('Bold (Ctrl+B)', 'B', 'dh-rich__btn--b', function () { exec('bold'); }),
+			tool('Italic (Ctrl+I)', 'I', 'dh-rich__btn--i', function () { exec('italic'); }),
+			tool('Heading', 'H', '', heading),
+			tool('Bulleted list', '•', '', function () { exec('insertUnorderedList'); }),
+			tool('Numbered list', '1.', '', function () { exec('insertOrderedList'); }),
+			tool('Link (Ctrl+K)', '🔗', '', link)
+		]);
+
+		return {
+			el: h('div', { class: 'dh-rich' + (ro ? ' is-readonly' : '') }, [bar, area]),
+			get: function () { return touched ? htmlToMd(area) : (value || ''); },
+			focus: function () { if (!ro) { area.focus(); } }
+		};
+	}
+
 	/**
 	 * Builds one field. Returns { el, get() } — get() gives the value to save.
 	 */
@@ -438,10 +615,16 @@
 
 		switch (f.type) {
 			case 'multilineText':
-			case 'richText':
-				control = h('textarea', { id: id, class: 'dh-input' + (f.type === 'richText' ? ' dh-input--rich' : ''), readonly: ro, 'aria-describedby': help ? id + '-h' : null, oninput: mark });
+				control = h('textarea', { id: id, class: 'dh-input', readonly: ro, 'aria-describedby': help ? id + '-h' : null, oninput: mark });
 				control.value = value || '';
 				get = function () { return control.value; };
+				break;
+
+			case 'richText':
+				var rich = richEditor(id, f, value, ro, help ? id + '-h' : null, mark);
+				control = rich.el;
+				labelEl = h('span', { class: 'dh-label', id: id + '-l', text: f.name, onclick: rich.focus });
+				get = rich.get;
 				break;
 
 			case 'checkbox':
@@ -528,7 +711,9 @@
 						wp.Uploader.defaults.multipart_params = wp.Uploader.defaults.multipart_params || {};
 						wp.Uploader.defaults.multipart_params.drift_hub_artist = a.id;
 					}
-					var frame = wp.media({ title: f.name, multiple: f.max === 1 ? false : 'add', library: { drift_hub_artist: a.id }, button: { text: 'Use ' + (f.max === 1 ? 'this' : 'these') } });
+					var lib = { drift_hub_artist: a.id };
+					if (f.accept) { lib.type = f.accept; }
+					var frame = wp.media({ title: f.name, multiple: f.max === 1 ? false : 'add', library: lib, button: { text: 'Use ' + (f.max === 1 ? 'this' : 'these') } });
 					frame.on('select', function () {
 						var chosen = frame.state().get('selection').toJSON().map(function (m) {
 							var thumb = (m.sizes && (m.sizes.medium || m.sizes.thumbnail || m.sizes.full)) ? (m.sizes.medium || m.sizes.thumbnail || m.sizes.full).url : (m.icon || '');

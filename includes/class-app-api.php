@@ -59,7 +59,7 @@ final class Drift_Hub_App_Api {
 				if ( ! empty( $field['hidden'] ) ) {
 					continue;
 				}
-				$f = array_intersect_key( $field, array_flip( [ 'name', 'type', 'choices', 'help', 'readonly', 'required', 'group', 'max', 'format', 'symbol', 'default' ] ) );
+				$f = array_intersect_key( $field, array_flip( [ 'name', 'type', 'choices', 'help', 'readonly', 'required', 'group', 'max', 'accept', 'format', 'symbol', 'default' ] ) );
 				if ( 'multipleRecordLinks' === $field['type'] ) {
 					$f['link'] = [ 'table' => $field['link']['table'], 'inverse' => ! empty( $field['link']['inverse'] ) ];
 				}

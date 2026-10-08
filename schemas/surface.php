@@ -21,6 +21,9 @@
  *               inverse link is computed from the other side, never stored
  *   compute     formula/createdTime: callable( array $fields, array $record ): mixed
  *   group       section heading in the editor (singleton tables)
+ *   max         multipleAttachments/multipleRecordLinks: most items allowed
+ *   accept      multipleAttachments: limit the media picker to one kind
+ *               ('image', 'video'). The hub picker only, not enforced on save
  *   hub_only    true = used by the hub itself only: left out of the website
  *               API, and editing it doesn't flag unpublished changes
  *
@@ -44,7 +47,7 @@ defined( 'ABSPATH' ) || exit;
 
 $t    = static fn( array $extra = [] ) => [ 'type' => 'singleLineText' ] + $extra;
 $long = static fn( array $extra = [] ) => [ 'type' => 'multilineText' ] + $extra;
-$rich = static fn( array $extra = [] ) => [ 'type' => 'richText', 'help' => 'Supports **bold**, _italic_, [links](https://…) and - lists.' ] + $extra;
+$rich = static fn( array $extra = [] ) => [ 'type' => 'richText' ] + $extra; // Edited in a WYSIWYG box; stored as Markdown.
 $url  = static fn( array $extra = [] ) => [ 'type' => 'url' ] + $extra;
 $file = static fn( array $extra = [] ) => [ 'type' => 'multipleAttachments' ] + $extra;
 $chk  = static fn( array $extra = [] ) => [ 'type' => 'checkbox' ] + $extra;
@@ -72,10 +75,12 @@ return [
 				'Logo'             => $file( [ 'group' => 'Images', 'max' => 1, 'help' => 'Square or wide PNG with a transparent background works best.' ] ),
 				'Logo (Light)'     => $file( [ 'group' => 'Images', 'max' => 1, 'help' => 'For dark backgrounds.' ] ),
 				'Hero Image'       => $file( [ 'group' => 'Images', 'max' => 1, 'help' => 'Wide photo, about 2400px across.' ] ),
-				'Hero Video URL'   => $url( [ 'group' => 'Images', 'help' => 'Optional MP4/WebM background video.' ] ),
+				'Hero Video'       => $file( [ 'group' => 'Images', 'max' => 1, 'accept' => 'video', 'help' => 'Optional MP4/WebM background video. Short, silent and under about 10MB works best. Used instead of the Hero Video URL.' ] ),
+				'Hero Video URL'   => $url( [ 'group' => 'Images', 'help' => 'Optional MP4/WebM background video hosted elsewhere. Only used if no Hero Video is uploaded.' ] ),
 				'Press Kit PDF'    => $file( [ 'group' => 'Images', 'max' => 1 ] ),
 				'Primary Colour'   => $t( [ 'group' => 'Colours', 'format' => 'colour', 'help' => 'Hex code, e.g. #ee4367' ] ),
 				'Secondary Colour' => $t( [ 'group' => 'Colours', 'format' => 'colour' ] ),
+				'General Email'    => [ 'type' => 'email', 'group' => 'Contact', 'help' => 'General enquiries. Listed first on the contact page.' ],
 				'Booking Email'    => [ 'type' => 'email', 'group' => 'Contact', 'help' => 'Booking enquiries from the website are emailed here.' ],
 				'Management Email' => [ 'type' => 'email', 'group' => 'Contact' ],
 				'Press Email'      => [ 'type' => 'email', 'group' => 'Contact' ],
