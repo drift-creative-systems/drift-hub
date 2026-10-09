@@ -31,9 +31,10 @@ button { font: inherit; color: inherit; }
 /* Top bar */
 .dh-top { position: sticky; top: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between; gap: 16px; height: 60px; padding: 0 20px; background: var(--ink); color: var(--paper); }
 .dh-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-.dh-mark { width: 28px; height: auto; color: var(--paper); }
-.dh-brand span { display: grid; font: 500 17px/1 var(--display); letter-spacing: .16em; }
-.dh-brand small { margin-top: 3px; font: 400 9px var(--text); letter-spacing: .32em; text-transform: uppercase; color: #9ea3aa; }
+/* Surface Hub logo: blue monogram (#2563eb, brand pack), white DRIFT:, blue product name. The name uses a lighter blue: #2563eb is only 4.1:1 on black, #3b82f6 is 5.7:1. */
+.dh-mark { width: 30px; height: auto; flex: none; color: #2563eb; }
+.dh-brand span { display: grid; font: 600 17px/1 var(--display); letter-spacing: .2em; }
+.dh-brand small { margin-top: 4px; font: 500 9px var(--display); letter-spacing: .2em; text-transform: uppercase; color: #3b82f6; }
 .dh-top__right { display: flex; align-items: center; gap: 16px; font-size: 14px; }
 .dh-user { color: #c9ccd1; text-decoration: none; }
 .dh-user:hover { color: var(--paper); text-decoration: underline; text-underline-offset: 3px; }

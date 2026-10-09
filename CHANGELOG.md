@@ -2,6 +2,11 @@
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [SemVer](https://semver.org/).
 
+## [1.6.1] - 2026-10-09
+
+### Changed
+- **New Surface Hub logo** in the hub's top bar and the wp-admin header: the new Drift monogram in blue (#2563EB), "DRIFT:" in white and "SURFACE HUB" in blue. The product name uses #3B82F6 so the small text passes contrast on black.
+
 ## [1.6.0] - 2026-10-08
 
 ### Added

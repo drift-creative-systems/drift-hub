@@ -43,9 +43,10 @@ body.dh-admin {
 	border-radius: var(--dh-r);
 }
 .dh-head__brand { display: flex; align-items: center; gap: 12px; margin: 0; }
-.dh-head__mark { width: 32px; height: auto; flex: none; color: var(--dh-paper); }
-.dh-head__name { display: grid; font: 500 19px/1 var(--dh-display); letter-spacing: .16em; }
-.dh-head__name small { margin-top: 4px; font: 400 10px var(--dh-text); letter-spacing: .32em; text-transform: uppercase; color: #9ea3aa; }
+/* Surface Hub logo: blue monogram (#2563eb, brand pack), white DRIFT:, blue product name (#3b82f6: 5.7:1 on black, where #2563eb is 4.1:1). */
+.dh-head__mark { width: 34px; height: auto; flex: none; color: #2563eb; }
+.dh-head__name { display: grid; font: 600 19px/1 var(--dh-display); letter-spacing: .2em; }
+.dh-head__name small { margin-top: 5px; font: 500 10px var(--dh-display); letter-spacing: .2em; text-transform: uppercase; color: #3b82f6; }
 .dh-head__nav { display: flex; flex-wrap: wrap; gap: 4px; }
 .dh-admin #wpbody-content .dh-head__nav a { padding: 7px 14px; border-radius: 999px; color: #c9ccd1; text-decoration: none; font: 500 13px var(--dh-display); }
 .dh-admin #wpbody-content .dh-head__nav a:hover { color: var(--dh-paper); background: #1f2023; }

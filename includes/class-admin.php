@@ -72,7 +72,7 @@ final class Drift_Hub_Admin {
 		<header class="dh-head">
 			<p class="dh-head__brand">
 				<?php echo Drift_Hub_App::mark( 'dh-head__mark' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static SVG. ?>
-				<span class="dh-head__name" aria-hidden="true">DRIFT<small>Surface Hub</small></span>
+				<span class="dh-head__name" aria-hidden="true">DRIFT:<small>Surface Hub</small></span>
 				<span class="screen-reader-text">Drift: Surface Hub</span>
 			</p>
 			<nav class="dh-head__nav" aria-label="Drift: Surface Hub">

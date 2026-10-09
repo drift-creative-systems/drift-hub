@@ -116,7 +116,7 @@ final class Drift_Hub_App {
 <body class="dh-body">
 <a class="dh-skip" href="#dh-main">Skip to content</a>
 <header class="dh-top">
-	<a class="dh-brand" href="#/" aria-label="Drift: Surface Hub — all artists"><?php echo $mark; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static SVG. ?><span>DRIFT<small>Surface Hub</small></span></a>
+	<a class="dh-brand" href="#/" aria-label="Drift: Surface Hub — all artists"><?php echo $mark; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static SVG. ?><span>DRIFT:<small>Surface Hub</small></span></a>
 	<div class="dh-top__right">
 		<a class="dh-user" href="#/account" title="Your account"><?php echo esc_html( wp_get_current_user()->display_name ); ?></a>
 		<a class="dh-link" href="<?php echo esc_url( wp_logout_url( self::url() ) ); ?>">Log out</a>
@@ -143,9 +143,17 @@ final class Drift_Hub_App {
 		exit;
 	}
 
-	/** The Drift mark. Decorative: the name is always given in text beside it. */
+	/**
+	 * The Drift monogram, from the brand pack (Logos/drift-surface-hub). Coloured by CSS via currentColor.
+	 * Decorative: the name is always given in text beside it.
+	 */
 	public static function mark( string $class = 'dh-mark' ): string {
-		return '<svg class="' . esc_attr( $class ) . '" viewBox="80 40 180 160" aria-hidden="true" focusable="false"><path fill="currentColor" d="M80 40H180C220 40 260 80 260 120C260 160 220 200 180 200H80L130 150H180C196 150 210 136 210 120C210 104 196 90 180 90H80V40Z"/><path fill="currentColor" d="M90 170L150 110H210L150 170H90Z"/></svg>';
+		return '<svg class="' . esc_attr( $class ) . '" viewBox="12 12 79 76" aria-hidden="true" focusable="false">'
+			. '<path fill="currentColor" d="M17 12H54C77 12 91 29 91 50C91 72 76 88 54 88H45L55 76H54C70 76 79 64 79 50C79 35 69 24 54 24H29V44H17Z"/>'
+			. '<path fill="currentColor" d="M17 55H29L17 67Z"/>'
+			. '<path fill="currentColor" d="M41 55H54L25 88H12Z"/>'
+			. '<path fill="currentColor" d="M55 76H70L59 88H43Z"/>'
+			. '</svg>';
 	}
 
 	/* ── Footer links ───────────────────────────────────────────────── */
